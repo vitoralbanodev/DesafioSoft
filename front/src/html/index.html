@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no">
+        <title>Suite Store - Home</title>
+        <link href="data:image/x-icon;base64,AAABAAEAEBAQAAEABAAoAQAAFgAAACgAAAAQAAAAIAAAAAEABAAAAAAAgAAAAAAAAAAAAAAAEAAAAAAAAAAKCg
+        kAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAERABERERABERAAARERAAAREAAAAAAAABERABERERABEREBEREREREREAAAAAAAAREQERAREBEBERAREBEQERAREAAAAAAAABEQERAREBEQERA
+        REBEQEREBEAAAAAAAAAEQERERERERERAREREREREQABERERERERERERERERERHn8wAAw+EAAMABAADn8wAA7/8AAMADAADd2wAA3d0AAMABAADd3QAA3d4AAMAAAADf/wAA3/8AAB//AAD//wAA" rel="icon" type="image/x-icon">
+        <link rel="stylesheet" href="../css/stylesheet.css">
+        <script src="https://kit.fontawesome.com/df600433e8.js" crossorigin="anonymous"></script>
+        <script src="../scripts/general.js"></script>
+        <script src="../scripts/purchase.js"></script>
+    </head>
+    <body onload="fillTable()">
+        <header class="navegationPanel">
+            <a href="index.html" id="homeButton">Suite Store</a>
+            <a href="products.html"><h3>Products</h3></a>
+            <a href="categories.html"><h3>Categories</h3></a>
+            <a href="history.html"><h3>History</h3></a>
+        </header>
+
+        <div class="mainFrame">
+            <form class="formClass" autocomplete="off">
+                <select id="productSelect" onchange="fillValueInputs(this.value)" required><option disabled selected hidden>Product</option></select>
+                <input type="number" id="largerInput" placeholder="Amount" min="0" required/>
+                <input type="text" class="valuesInputs" id="taxInput" placeholder="Tax Value" disabled />
+                <input type="text" class="valuesInputs" id="unitInput" placeholder="Unit Price" disabled />
+                <input type="text" id="hiddenInput" value="nothing" disabled hidden/>
+                <button id="addButton" type="button" onclick="addNewProduct()">Add Product</button>
+            </form>
+
+            <div class="purchaseDiv">
+                <div class="tableDiv">
+                    <table class="genericTable">
+                        <thead>
+                            <th class="productColumn">Product</th>
+                            <th>Unit price</th>
+                            <th>Amount</th>
+                            <th>Total</th>
+                            <th></th>
+                        </thead>
+                        <tbody class="products" id="tableBody">
+                        </tbody>
+                    </table>
+                </div>
+                <div class="totalLabels">
+                    <p><h3>Tax: <input type="text" class="labels" id="taxLabel" disabled /></h3></p>
+                    <p><h3>Total: <input type="text" class="labels" id="totalLabel" disabled /></h2></p>
+                    <button id="cancelButton" type="button" onclick="cancelShoppingCart()">Cancel</button>
+                    <button id="finishButton" type="button" onclick="finishShoppingCart()">Finish</button>
+                </div>
+            </div>
+
+        </div>
+
+    </body>
+</html>

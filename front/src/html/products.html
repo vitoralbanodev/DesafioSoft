@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Suite Store - Products</title>
+        <link href="data:image/x-icon;base64,AAABAAEAEBAQAAEABAAoAQAAFgAAACgAAAAQAAAAIAAAAAEABAAAAAAAgAAAAAAAAAAAAAAAEAAAAAAAAAAKCg
+        kAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAERABERERABERAAARERAAAREAAAAAAAABERABERERABEREBEREREREREAAAAAAAAREQERAREBEBERAREBEQERAREAAAAAAAABEQERAREBEQERA
+        REBEQEREBEAAAAAAAAAEQERERERERERAREREREREQABERERERERERERERERERHn8wAAw+EAAMABAADn8wAA7/8AAMADAADd2wAA3d0AAMABAADd3QAA3d4AAMAAAADf/wAA3/8AAB//AAD//wAA" rel="icon" type="image/x-icon">
+        <link rel="stylesheet" href="../css/stylesheet.css">
+        <script src="https://kit.fontawesome.com/df600433e8.js" crossorigin="anonymous"></script>
+        <script src="../scripts/general.js"></script>
+        <script src="../scripts/product.js"></script>
+    </head>
+    <body onload="fillCategorySelect(), fillTable()">
+        <header class="navegationPanel">
+            <a href="index.html" id="homeButton">Suite Store</a>
+            <a href="products.html"><h3>Products</h3></a>
+            <a href="categories.html"><h3>Categories</h3></a>
+            <a href="history.html"><h3>History</h3></a>
+        </header>
+
+        <div class="mainFrame">
+            <form class="formClass" id="productForm" autocomplete="off">
+                <select id="productSelect" name="category" required><option disabled selected hidden>Category</option></select>
+                <input type="text" name="name" id="largerInput" placeholder="Product name" minlength="4" maxlength="25" required />
+                <input type="number" name="amount" id="amount" placeholder="Amount" min="1" required/>
+                <input type="number" name="price" id="unitPrice" placeholder="Unit Price" min="1" step=".01" required/>
+                <button type="button" id="addButton" onclick="createProduct()">Add Product</button>
+            </form>
+
+            <div class="purchaseDiv" id="productDiv">
+                <div class="tableDiv" id="largerTable">
+                    <table class="genericTable">
+                        <thead>
+                            <th>Code</th>
+                            <th>Product</th>
+                            <th>Amount</th>
+                            <th>Unit price</th>
+                            <th>Category</th>
+                            <th></th>
+                        </thead>
+                        <tbody id="tableBody">
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </body>
+</html>

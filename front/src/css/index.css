@@ -1,0 +1,17 @@
+@import url("../css/generic.css");
+@import url("../css/buttons.css");
+@import url("../css/table.css");
+@import url("../css/inputs.css");
+
+.purchaseDiv{
+    border-left: 1px solid rgb(122, 122, 122);
+    grid-column: 2;
+    padding-left: 3%;
+    height: 600px;
+    width: 90%;
+    margin-top: .5em;
+}
+
+.productColumn{
+    width: 200px;
+}
