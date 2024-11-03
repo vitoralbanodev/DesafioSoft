@@ -1,9 +1,7 @@
 async function pickUrlParams(){
     const urlParams = new URLSearchParams(window.location.search);
-    console.log("urlParams:", urlParams)
     var code = urlParams.get("code");
     getJsonTableCondition("order_item", "order_code", code).then(data => {
-        console.log("data: ",data)
         fillTable(data)
     });
 }

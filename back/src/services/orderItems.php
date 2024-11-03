@@ -12,7 +12,8 @@
                 $sql->bindValue(':amount', $amount);
                 $sql->bindValue(':price', $price);
                 $sql->bindValue(':tax', $tax);
-                $sql->execute();    
+                $sql->execute();
+                methods->update("products", "candelete = false", "products.code = ".$pcode);
             } catch (Exception $e) {
                 throw $e;
             }

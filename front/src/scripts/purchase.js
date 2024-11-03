@@ -17,7 +17,7 @@ function fillProductSelect(){
 function fillValueInputs(code){
     getJsonTableCondition("products", "products.code", code).then(productList => {
         let product = productList[0];
-        let taxValue = parseInt(numberRegex('' + product.tax));
+        let taxValue = parseInt(numberRegex('' + product));
         let unitPrice = parseFloat(numberRegex('' + product.price));
         productName = product.name.replace(/[^a-z0-9 ]/gi, '');
         document.getElementById("taxInput").value = `$` + ((taxValue * unitPrice)/100).toFixed(2);
@@ -41,6 +41,7 @@ async function addNewProduct(){
         }
         if(await verifyStock(productCode, amountData))
         {
+            await updateTable("candelete = false", productCode);
             var cartList = getLocalStorage("shoppingCart");
             var lastIndex =  cartList.at(-1);
             var code = lastIndex ? (parseInt(lastIndex.code)+ 1) : "001";
@@ -91,9 +92,9 @@ function fillTable(){
             let total = row.insertCell();
             total.innerHTML = "$" + totalNumber;
             let deleteButton = row.insertCell();
-            deleteButton.innerHTML = `<button class='labels' type='submit' id='deleteButton' onclick='deleteRow(` + JSON.stringify(data.code) + `, "shoppingCart", true)'><i class="fa-solid fa-trash"></i></button>`;
+            deleteButton.innerHTML = `<button class='labels' type='submit' id='deleteButton' onclick='deleteRow(` + JSON.stringify(data.code) + `, "shoppingCart", true, ` + JSON.stringify(data.productCode) + `)'><i class="fa-solid fa-trash"></i></button>`;
         }
-        else deleteRowOnLoad(data.code, "shoppingCart")
+        else deleteShoppingCart(data.code, data.productCode)
     });
     fillProductSelect()
     document.getElementById("taxLabel").value = "$" + taxDisplay.toFixed(2);
@@ -104,7 +105,7 @@ function cancelShoppingCart(){
     if(confirm("Are you sure you want to cancel your purchase?")){
         var productList = getLocalStorage("shoppingCart");
         productList.forEach(data => {
-            deleteRowOnLoad(data.code, "shoppingCart")
+            deleteShoppingCart(data.code, data.productCode)
         });
     }
 }
@@ -116,7 +117,7 @@ async function verifyStock(code, amountData){
         if(parseInt(data.amount) >= amountData){
             let value = (data.amount - amountData);
             boolean = true;
-            updateTable(value, code);
+            updateTable("amount = " + value, code);
         }
     });
     return boolean;
@@ -129,7 +130,6 @@ async function finishShoppingCart(){
             var total = numberRegex(document.getElementById("totalLabel").value);
             var taxTotal = numberRegex(document.getElementById("taxLabel").value);
             var order = await createOrder(total, taxTotal, productList.length);
-            console.log("order: ",order)
             productList.forEach(product =>{
                 createOrderItem(product, order);
             })
@@ -143,9 +143,6 @@ async function finishShoppingCart(){
 }
 
 async function createOrder(total, tax, qtd){
-    console.log("total " + total)
-    console.log("tax " + tax)
-    console.log("qtd " + qtd)
     var url = defineRouteURL("orders");
     var response = await fetch(url,{
         method: "POST",

@@ -13,13 +13,15 @@ function fillCategorySelect(){
     });
 }
 
-async function createProduct(){
+async function createProduct(event){
+    event.preventDefault()
     var select = document.getElementById("productSelect");
     var category = select.options[select.selectedIndex].value;
-    var name = document.getElementById("largerInput").value;
-    var amount = document.getElementById("amount").value;
-    var price = document.getElementById("unitPrice").value;
-    if(validateProduct(name, amount, price)){
+    var name = document.getElementById("largerInput").value.replace(/[^a-z0-9 ]/gi, '');
+    var amount = numberRegex(document.getElementById("amount").value);
+    var price = numberRegex(document.getElementById("unitPrice").value);
+    
+    if(validateProduct(name, amount, price, category)){
         await fetch(url,{
             method: "POST",
             body: JSON.stringify({
@@ -49,14 +51,13 @@ async function createProduct(){
 function fillTable(){
     cleanTable();
     const table = document.getElementById("tableBody")
-    getJsonTable("products").then(async productList => {
-        orderCode(productList);
+    getJsonTable("products").then(productList => {
         productList.forEach(async data => {
             let productNameRegex = data.name.replace(/[^a-z0-9 ]/gi, '');
             let amountNumber = numberRegex('' + data.amount);
             let unitPriceNumber = numberRegex('' + data.price);
             let categoryRegex = data.category_name.replace(/[^a-z0-9 ]/gi, '');
-            let canDelete = await verifyCanDelete(data.code, productNameRegex);
+            let canDelete = data.candelete;
             let row = table.insertRow();
             let code = row.insertCell();
             code.innerHTML = data.code;
@@ -69,13 +70,17 @@ function fillTable(){
             let category = row.insertCell();
             category.innerHTML = categoryRegex;
             let deleteButton = row.insertCell();
-            deleteButton.innerHTML = `<button class='labels' type='submit' id='deleteButton' onclick='deleteRow(` + JSON.stringify(data.code) + `, "products", ` + canDelete + `)'><i class="fa-solid fa-trash"></i></button>`;
+            deleteButton.innerHTML = `<button class='labels' type='submit' id='deleteButton' onclick='deleteRow(` + JSON.stringify(data.code) + `, "products", ` + canDelete + `, ` + JSON.stringify(data.category_code) + `)'><i class="fa-solid fa-trash"></i></button>`;
         });
     });
 }
 
 
-function validateProduct(name, amount, price){
+function validateProduct(name, amount, price, category){
+    if(category == "Category"){
+        alert("You must to select a category to this product");
+        return false;
+    }
     if(!verifyName(name)){
         alert("The product name must be a minimum of 4 and a maximum of 25 characters");
         return false;

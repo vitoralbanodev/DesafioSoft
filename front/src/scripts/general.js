@@ -37,45 +37,34 @@ async function getJsonTableCondition(table, column, condition){
 
 function getLocalStorage(table){
     var tableJson = localStorage.getItem(table);
-    
+
     return tableJson ? JSON.parse(tableJson) : [];
 }
 
-function deleteRow(code, key, validate){
-    if(confirm("Are you sure you want to remove this?")){
-        if(validate) deleteRowOnLoad(code, key)
+function deleteRow(codeRow, key, validate, code){
+    if(window.confirm("Are you sure you want to remove this?")){
+        if(validate){
+            if(key == "shoppingCart") deleteShoppingCart(codeRow, code)
+            else deleteRowOnLoad(codeRow, key, code)
+        }
         else alert("It was not possible to delete this item! \nPlease verify if it is not linked with another table.")
     }
 }
 
-async function deleteRowOnLoad(code, key){
-    console.log("code " + code);
-    console.log("key "+key);
-    if(key == "shoppingCart"){
-        var amountData = await getJsonTableCondition("products", "products.code", code).then(product => product[0].amount);
-        var cart = getLocalStorage("shoppingCart");
-        cart.forEach(async (data, index) => {
-            if(data.code == code){
-                var value = parseInt(data.amount) + amountData;
-                cart.splice(index, 1);
-                await updateTable(value, code)
-            }
-        })
-        localStorage.setItem("shoppingCart", JSON.stringify(cart));
-    }
-    else{
-        await fetch(url, {
-            headers: {"Content-Type" : "application/json"},
-            method: "DELETE",
-            body: JSON.stringify({
-                'table': key,
-                'code': code
-            })
-        })
-    }
-    setInterval(() => {
-        location.reload()
-    }, 50);
+async function deleteShoppingCart(code, productCode){
+    var amountData = await getJsonTableCondition("products", "products.code", productCode).then(product => product[0].amount);
+    await getJsonTableCondition("order_item", "product_code", productCode).then(async product => {
+        if(product.length == 0) await updateTable("candelete = true", productCode);
+    });
+    var cart = getLocalStorage("shoppingCart");
+    cart.forEach(async (data, index) => {
+        if(data.code == code){
+            var value = parseInt(data.amount) + amountData;
+            cart.splice(index, 1);
+            await updateTable("amount = " + value, productCode)
+        }
+    })
+    localStorage.setItem("shoppingCart", JSON.stringify(cart));
 }
 
 async function updateTable(value, code){
@@ -90,13 +79,13 @@ async function updateTable(value, code){
     });
 }
 
-async function verifyExistence(name, table, column){
+function verifyExistence(name, table, column){
     var boolean = true;
     var nameString = "LOWER('" + name + "')";
     var column = "LOWER("+column+")";
-    await getJsonTableCondition(table, column, nameString).then(list =>{
+    getJsonTableCondition(table, column, nameString).then(list =>{
         if(list.length > 0){
-            boolean = false;   
+            boolean = false;
         }
     });
     return boolean;
@@ -111,11 +100,11 @@ function verifyNumbers(number){
     if(number.constructor === Array)
     {
         number.forEach(data => {
-            if(data == "" || isNaN(data)) boolean = false; 
+            if(data == "" || isNaN(data)) boolean = false;
         });
     }
     else{
-        
+
         boolean = (!number == "") && !isNaN(number);
     }
 
@@ -141,13 +130,13 @@ function verifyName(name){
     if(name.constructor === Array)
         {
             name.forEach(data => {
-                if(data.length <= 3 || data.length > 25) boolean = false; 
+                if(data.length <= 3 || data.length > 25) boolean = false;
             });
         }
         else{
             boolean = name.length > 3 && name.length <= 25;
         }
-        
+
     return boolean;
 }
 // FUNÇÕES CORRIGIDAS COM BANCO

@@ -3,6 +3,7 @@ body{
     font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif ;
     width: 100%;
     height: 100%;
+    overflow-x: hidden;
 }
 
 html{
@@ -26,6 +27,15 @@ html{
 
 ::-webkit-scrollbar-thumb:hover{
     background-color:  #5650fc;
+}
+
+.purchaseDiv{
+    border-left: 1px solid rgb(122, 122, 122);
+    grid-column: 2;
+    padding-left: 3%;
+    height: 80%;
+    width: auto;
+    margin-top: .5em;
 }
 
 #addButton{
@@ -105,7 +115,8 @@ html{
 }
 
 .formClass{
-    width: 100% !important;
+    width: 1000px;
+    height: 70%;
     padding-top: .5em;
 }
 
@@ -165,8 +176,9 @@ html{
 
 .mainFrame{
     display: grid;
-    width: 100%;
+    width: 95%;
     height: 90%;
+    justify-content: space-evenly;
 }
 
 .navegationPanel{
@@ -206,15 +218,6 @@ html{
 
 .productColumn{
     width: 200px;
-}
-
-.purchaseDiv{
-    border-left: 1px solid rgb(122, 122, 122);
-    grid-column: 2;
-    padding-left: 3%;
-    height: 600px;
-    width: 90%;
-    margin-top: .5em;
 }
 
 #sortIcon{
@@ -264,7 +267,7 @@ th, td{
     border: 1px solid rgb(122, 122, 122);
     border-top: none;
     width: 100px;
-    max-width: 200px;
+    max-width: 100px;
     word-wrap: break-word;
     overflow-wrap: break-word;
 }
@@ -280,14 +283,15 @@ table.genericTable td:last-of-type, th:last-of-type{
 }
 
 .tableDiv{
-    width: 550px;
-    height: 75%;
+    width: 100%;
+    height: 65%;
     overflow: auto;
     overflow-x: hidden;
 }
 
 .totalLabels{
-    margin-top: 5%;
+    margin-top: 10%;
+    margin-right: 5%;
     text-align: end;
 }
 

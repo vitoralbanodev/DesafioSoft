@@ -1,8 +1,9 @@
 var url = defineRouteURL("categories");
 
-async function createCategory(){
-    var name = document.getElementById("categoryName").value;
-    var tax = document.getElementById("categoryTax").value;
+async function createCategory(e){
+    e.preventDefault();
+    var name = document.getElementById("categoryName").value.replace(/[^a-z0-9 ]/gi, '');
+    var tax = numberRegex(document.getElementById("categoryTax").value);
     if(validateCategory(name, tax)){
         await fetch(url,{
             method: "POST",
@@ -12,7 +13,6 @@ async function createCategory(){
             })
         })
         .then(response => {
-            console.log("teste")
             if(!response.ok){
                 throw new Error('Error on internal request to server')
             }
@@ -33,12 +33,12 @@ async function fillTable(){
     cleanTable();
     const table = document.getElementById("tableBody")
     getJsonTable("categories").then(categories =>{
-        orderCode(categories);
+        console.log(categories);
         categories.forEach(async category => {
             let taxNumber = numberRegex(category.tax.toString());
             let categoryName = category.name;
             let categoryRegex = categoryName.replace(/[^a-z0-9 ]/gi, '');
-            let canDelete = await verifyExistence(categoryName, "products", "categories.name");
+            let canDelete = category.candelete;
             let row = table.insertRow();
             let code = row.insertCell();
             code.innerHTML = category.code;

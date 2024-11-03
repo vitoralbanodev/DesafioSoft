@@ -21,12 +21,12 @@
         </header>
 
         <div class="mainFrame">
-            <form class="formClass" id="productForm" autocomplete="off">
+            <form class="formClass" id="productForm" autocomplete="off" onsubmit="createProduct(event)">
                 <select id="productSelect" name="category" required><option disabled selected hidden>Category</option></select>
                 <input type="text" name="name" id="largerInput" placeholder="Product name" minlength="4" maxlength="25" required />
                 <input type="number" name="amount" id="amount" placeholder="Amount" min="1" required/>
                 <input type="number" name="price" id="unitPrice" placeholder="Unit Price" min="1" step=".01" required/>
-                <button type="button" id="addButton" onclick="createProduct()">Add Product</button>
+                <button type="submit" id="addButton">Add Product</button>
             </form>
 
             <div class="purchaseDiv" id="productDiv">

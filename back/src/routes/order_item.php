@@ -34,5 +34,5 @@
         }
     }
     elseif($method === "DELETE"){
-        methods->delete($params['code'], "order_item");
+        methods->delete($params['rowCode'], "order_item");
     }

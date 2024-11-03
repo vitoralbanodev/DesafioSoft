@@ -1,0 +1,60 @@
+.tableComponent {
+  display: flex;
+  grid-column: 2;
+  border-left: solid;
+  border-color: var(--wine);
+  align-items: center;
+  justify-content: center;
+  width: 50%;
+}
+
+.tableDiv {
+  height: 65%;
+  overflow: auto;
+  overflow-x: hidden;
+  padding: 0 50px;
+}
+
+.genericTable {
+  width: 100%;
+  border-collapse: collapse;
+  border-top: none;
+  border-bottom: none;
+  table-layout: fixed;
+}
+
+.genericTable th,
+td {
+  text-align: center;
+  font-size: 1.1rem;
+  border-bottom: 1px solid;
+  width: 100px;
+  max-width: 100px;
+  word-wrap: break-word;
+  overflow-wrap: break-word;
+}
+
+.genericTable td:last-of-type,
+th:last-of-type {
+  border-right: none;
+  border-bottom: none;
+  justify-content: center;
+  align-items: center;
+}
+
+.soloTable{
+  width: 100%;
+  margin-left: 0.8%;
+  margin-top: 0.8%;
+  margin-right: 0.8%;
+}
+
+.soloTable td:last-of-type,
+th:last-of-type {
+  width: 50px;
+  border-right: none;
+  border-bottom: none;
+  justify-content: center;
+  align-items: center;
+  
+}

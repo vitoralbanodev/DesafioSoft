@@ -33,8 +33,8 @@
         }
     }
     elseif($method === "DELETE"){
-        if($params != null && array_key_exists("code", $params)){
-            $order->deleteOrders($params['code']);
+        if($params != null && array_key_exists("rowCode", $params)){
+            $order->deleteOrders($params['rowCode']);
         }
         else{
             methods->deleteAll("order_item");

@@ -1,5 +1,6 @@
 var currentOrder = "asc";
 var historyList;
+var cart = getLocalStorage("shoppingCart");
 var url = defineRouteURL("orders")
 
 function fillTable(){
@@ -24,18 +25,37 @@ function fillTable(){
             date.innerHTML = formatDate;
             let deleteButton = row.insertCell();
             deleteButton.innerHTML = `<a href="details.html?code=` + data.code + `"><button class="labels" id="viewButton"><i class="fa-solid fa-eye"></i></button></a> 
-                <button class="labels" id="deleteButton" onclick='deleteRowOnLoad(` + JSON.stringify(data.code) + `, "orders")'><i class="fa-solid fa-trash"></i></button>`;
+                <button class="labels" id="deleteButton" onclick='deleteOrder(` + JSON.stringify(data.code) + `)'><i class="fa-solid fa-trash"></i></button>`;
         }
         else deleteRowOnLoad(data.code, "orders")
     });
 }
 
-async function clearHistory(){
+async function deleteOrder(code){
+    if(confirm("Are you sure you want to remove this?")){
+        await getJsonTableCondition("order_item", "order_code", code).then(async productList => {
+            await deleteRowOrder(code);
+            productList.forEach(async product1 =>{
+                let productCode = product1.product_code;
+                await getJsonTableCondition("order_item", "product_code", productCode).then(async product => {
+                    if(cart.length == 0 && product.length == 0) await updateTable("candelete = true", productCode);
+                });
+            })
+        })
+        setInterval(() => {
+            location.reload()
+        }, 50);
+    }
+}
+
+async function deleteRowOrder(codeRow){
     await fetch(url, {
         headers: {"Content-Type" : "application/json"},
-        method: "DELETE"
+        method: "DELETE",
+        body: JSON.stringify({
+            'rowCode': codeRow
+        })
     });
-    cleanTable();
 }
 
 async function orderByDate(){

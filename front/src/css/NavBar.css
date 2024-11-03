@@ -1,0 +1,55 @@
+nav {
+  color: var(--white);
+  height: 80px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background: var(--wine);
+  gap: 2rem;
+  padding: 10px 80px;
+  box-shadow: 0 4px 10px 0 rgba(0, 0, 0, 0.425);
+}
+
+nav ul {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+nav li a {
+  color: inherit;
+  text-decoration: none;
+  font-size: 1.6rem;
+}
+
+nav li a:hover,
+li.active {
+  color: var(--light-wine);
+  text-shadow: -1px 0 3px black, 0 1px 3px black, 1px 0 3px black,
+    0 -1px 3px black;
+  transition: 0.3s ease-in-out;
+}
+
+nav li a:hover::after {
+  content: "";
+  width: 30%;
+  height: 2px;
+  background: var(--light-wine);
+  position: absolute;
+  bottom: -4px;
+  left: 20px;
+  transition: 0.4s ease-in-out;
+}
+
+nav li {
+  list-style: none;
+  padding: 0 30px;
+  position: relative;
+}
+
+#logo{
+  width: 300px;
+  height: 60px;
+  object-fit: cover;
+  object-position: 20px -111px;
+}

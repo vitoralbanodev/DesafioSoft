@@ -24,7 +24,7 @@
             echo json_encode(methods->getSpecificSelect($params['table'], $params['column'], $params['condition']));
         else{
             try {
-                $categories->createCategory($params['name'], $params['tax']);
+                $categories->createCategory(strtoupper($params['name']), $params['tax']);
                 echo json_encode(["success" => true, "message" => 'A new product has been created successfully!']);
             } catch (Exception $e) {
                 error_log($e->getMessage());
@@ -33,5 +33,5 @@
         }
     }
     elseif($method === "DELETE"){
-        methods->delete($params['code'], "categories");
+        methods->delete($params['rowCode'], "categories");
     }

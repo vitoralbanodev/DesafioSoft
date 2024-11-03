@@ -21,11 +21,12 @@
         }
     }
     elseif($method === "POST"){
-        if($params != null && array_key_exists("condition", $params)) 
-            echo json_encode($products->getSpecificSelect($params['column'], $params['condition']));
+
+        if(array_key_exists("data", $params) && array_key_exists("condition", $params['data'])) 
+            echo json_encode($products->getSpecificSelect($params['data']['column'], $params['data']['condition']));
         else{
             try {
-                $products->createProduct($params['name'], $params['amount'], $params['price'], $params['category']);
+                $products->createProduct(strtoupper($params['name']), $params['amount'], $params['price'], $params['category']);
 
                 echo json_encode(["success" => true, "message" => 'A new product has been created successfully!']);
             } catch (PDOException $e) {
@@ -36,8 +37,13 @@
         }
     }
     elseif($method === "DELETE"){
-        methods->delete($params['code'], "products");
+        $category_code = $params['auxCode'];
+        methods->delete($params['rowCode'], "products");
+        $response = methods->getSpecificSelect("products", "category_code", $category_code);
+        if(count($response) == 0){
+            methods->update("categories", "candelete = true", "categories.code = ".$category_code);
+        }
     }
     elseif($method === "PATCH"){
-        $products->update($params['value'], $params['code']);
+        methods->update("products", $params['value'], ("products.code = ".$params['code']));
     }

@@ -5,12 +5,13 @@
 
         function createProduct($name, $amount, $price, $category){
             try {
-                $sql = myPDO->prepare('INSERT INTO products (name, amount, price, category_code) VALUES (:name, :amount, :price, :category)');
+                $sql = myPDO->prepare('INSERT INTO products (name, amount, price, candelete, category_code) VALUES (:name, :amount, :price, true, :category)');
                 $sql->bindValue(':name', $name, PDO::PARAM_STR);
                 $sql->bindValue(':amount', $amount, PDO::PARAM_INT);
                 $sql->bindValue(':price', $price, PDO::PARAM_STR);
                 $sql->bindValue(':category', $category);
                 $sql->execute();
+                methods->update("categories", "candelete = false", "categories.code = ".$category);
             } catch (PDOException $e) {
                 throw new PDOException('Already exists a product named "'.$name.'"');
             }
@@ -37,16 +38,6 @@
                 $data = $sql->fetchAll();
     
                 return $data;
-            } catch (Exception $e) {
-                error_log($e->getMessage());
-            }
-        }
-
-        function update($value, $code){
-            try {
-                $queryString = "UPDATE products SET amount = $value WHERE products.code = $code";
-                $sql = myPDO->query($queryString);
-                $sql->execute();
             } catch (Exception $e) {
                 error_log($e->getMessage());
             }

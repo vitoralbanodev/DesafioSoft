@@ -14,18 +14,11 @@
         
     </head>
     <body onload="fillTable()">
-        <header class="navegationPanel">
-            <a href="index.html" id="homeButton">Suite Store</a>
-            <a href="products.html"><h3>Products</h3></a>
-            <a href="categories.html"><h3>Categories</h3></a>
-            <a href="history.html"><h3>History</h3></a>
-        </header>
-
         <div class="mainFrame">
-            <form class="formClass" id="category-form" autocomplete="off" >
+            <form class="formClass" id="category-form" autocomplete="off">
                 <input name="name" type="text" class="categoryInput" id="categoryName" placeholder="Category name" minlength="4" maxlength="25" required/>
                 <input name="tax" type="number" class="categoryInput" id="categoryTax" placeholder="Tax" min="0" max="100" maxlength="3" required/>
-                <button type="button" id="addButton" onclick="createCategory()">Add Category</button>
+                <button type="submit" id="addButton">Add Category</button>
             </form>
 
             <div class="purchaseDiv">

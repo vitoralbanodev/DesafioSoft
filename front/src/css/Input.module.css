@@ -1,0 +1,32 @@
+.input,
+.select {
+  color: var(--wine-500);
+  display: flex;
+  font-size: 25px;
+  font-weight: bold;
+  height: 40px;
+  width: 70%;
+  border-radius: 6px;
+  outline: none;
+  border: 2px solid var(--border);
+  box-shadow: 2px 3px 2px 0 var(--dark-wine);
+  background: #3807250c;
+}
+
+.input::placeholder,
+.select:invalid{
+  color: var(--placeholder) !important;
+}
+
+.input:focus,
+.select:focus {
+  border: 2px solid var(--wine);
+}
+
+.select{
+  appearance: none;
+  background-image: url("../assets/arrow_down.png");
+  background-repeat: no-repeat;
+  background-position: right 0.4rem top 55%;
+  background-size: 1.5rem auto;
+}
