@@ -1,41 +1,55 @@
 import { InputText } from "./InputText";
 import { Button } from "./Button";
+import { useState } from "react";
 import Table from "./TableComponents/Table";
-import axios from "axios";
+import Global from "./Global";
+import Swal from "sweetalert2";
 
 import style from "../css/Form.module.css";
-import { useState } from "react";
 
 export default function Category() {
   const [post, setPost] = useState({
     name: "",
     tax: 0,
   });
-  const [addedItem, setAddItem] = useState("");
+  const [fetchTable, setFetchTable] = useState(false);
 
   function handleChange(e) {
+    if (e.target.name == "name") {
+      let categoryNameRegex = e.target.value.replace(/[^a-zA-Z]/g, "");
+      e.target.value = categoryNameRegex;
+    }
+
+    if (e.target.name == "tax") {
+      let categoryTaxRegex = e.target.value.replace(/[^\d.]/g, "");
+      e.target.value = categoryTaxRegex;
+    }
+
     setPost({ ...post, [e.target.name]: e.target.value });
   }
 
   async function handleSubmit(e) {
     e.preventDefault();
-    const response = await axios
-      .post("http://localhost/routes/categories.php", post)
-      .then((response) => {
-        if (response.status != 200) {
-          throw new Error("Error on internal request to server");
-        }
-        return response.data;
-      })
-      .then((data) => {
-        if (data.success) alert(data.message);
-        else alert(data.message);
-        return data;
-      })
-      .catch((error) => {
-        alert("Something went wrong: " + error.message);
-      });
-    setAddItem(response);
+    Global.create("categories", post).then((data) => {
+      if (data.success) {
+        setFetchTable((prev) => !prev);
+        Swal.fire({
+          title: "Success!",
+          text: data.message,
+          icon: "success",
+          background: "fffcf3",
+          confirmButtonColor: "#5a2744",
+        });
+      } else
+        Swal.fire({
+          icon: "error",
+          title: "Oops...",
+          text: data.message,
+          background: "fffcf3",
+          confirmButtonColor: "#5a2744",
+        });
+      return data;
+    });
   }
 
   return (
@@ -74,7 +88,7 @@ export default function Category() {
         route="categories"
         columns={["CODE", "NAME", "TAX"]}
         params={["code", "name", "tax"]}
-        datatable={addedItem}
+        fetchTable={fetchTable}
       />
     </>
   );

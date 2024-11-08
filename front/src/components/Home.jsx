@@ -3,8 +3,8 @@ import { InputText } from "./InputText";
 import { Select } from "./Select";
 import { Button } from "./Button";
 import Table from "./TableComponents/Table";
-import axios from "axios";
 import Global from "./Global";
+import Swal from "sweetalert2";
 
 import style from "../css/Form.module.css";
 
@@ -16,29 +16,74 @@ export default function Home() {
     price: "",
     total: "",
   });
-  const [addedItem, setAddItem] = useState("");
+  const [fetchTable, setFetchTable] = useState(false);
+  const [priceLabel, setPriceLabel] = useState({
+    taxValue: "",
+    totalValue: "",
+  });
+
+  useEffect(() => {
+    async function fecthData() {
+      await Global.getJsonTable("cart").then((res) => {
+        let totalTax = 0;
+        let totalPrice = 0;
+        res.data.forEach((data) => {
+          let taxValue = calculateTax(data.tax, data.price) * data.amount;
+          totalTax += taxValue;
+          totalPrice += parseFloat(data.total);
+        });
+        handleSetLabel("taxValue", totalTax.toFixed(2));
+        handleSetLabel("totalValue", totalPrice);
+      });
+    }
+
+    function handleSetLabel(key, value) {
+      setPriceLabel((priceLabel) => ({ ...priceLabel, [key]: value }));
+    }
+
+    fecthData();
+
+    setPost({
+      product: "",
+      amount: "",
+      tax: "",
+      price: "",
+      total: "",
+    });
+  }, [fetchTable]);
+
+  function calculateTax(tax, priceAux) {
+    return ((tax ? tax : post.tax) / 100) * priceAux;
+  }
 
   async function handleSelectChange(e) {
-    handleChange(e);
+    handleDataSet("product", e.target.value);
     Global.getJsonTableCondition("products", "products.code", e.target.value)
       .then((res) => {
-        handleDataSet("tax", res.data[0].tax);
-        return res;
-      })
-      .then((res) => {
-        handleDataSet("price", res.data[0].price);
+        let tax = parseInt(res.data[0].tax);
+        let price = res.data[0].price;
+        handleDataSet("tax", tax);
+        handleDataSet("price", price);
+        handleTotalChange(null, price, tax);
       })
       .catch((error) => console.log(error));
   }
 
-  function handleChange(e) {
-    handleDataSet(e.target.name, e.target.value);
+  function handleAmountChange(e) {
+    handleDataSet("amount", e.target.value);
+    handleTotalChange(e.target.value);
+  }
+
+  function handleTotalChange(amount, price, tax) {
+    let priceAux = price ? price : post.price;
+    const value =
+      (amount ? amount : post.amount) * priceAux + calculateTax(tax, priceAux);
+    handleDataSet("total", value);
   }
 
   function handleDataSet(key, value) {
     setPost((post) => ({ ...post, [key]: value }));
   }
-
   async function verifyStock(code, amountData) {
     var boolean = false;
     await Global.getJsonTableCondition("products", "products.code", code).then(
@@ -47,7 +92,7 @@ export default function Home() {
         if (parseInt(data.amount) >= amountData) {
           let value = data.amount - amountData;
           boolean = true;
-          Global.updateTable("amount = " + value, code);
+          Global.updateTable("products", "amount = " + value, code);
         }
       }
     );
@@ -56,42 +101,54 @@ export default function Home() {
 
   async function handleSubmit(e) {
     e.preventDefault();
-    const value = post.amount * post.price;
-    handleDataSet("total", value);
     if (post.product != "") {
       if (post.amount <= 0) {
-        alert("The amount value can't be less than or equal to zero.");
+        Swal.fire({
+          title: "Oops...",
+          text: "The amount value can't be less than or equal to zero.",
+          icon: "error",
+          background: "fffcf3",
+          confirmButtonColor: "#5a2744",
+        });
         return;
       }
       if (await verifyStock(post.product, post.amount)) {
-        axios
-          .post("http://localhost/routes/cart.php", post)
-          .then((response) => {
-            if (response.status != 200) {
-              throw new Error("Error on internal request to server");
-            }
-            return response.data;
-          })
-          .then((data) => {
-            console.log("data ->", data);
-            if (data.success) {
-              console.log("data ->", data);
-              setAddItem(data);
-              alert(data.message);
-            } else alert(data.message);
-            return data;
-          })
-          .catch((error) => {
-            alert("Something went wrong: " + error.message);
-          });
-        // alert(
-        //   "A new product has been added successfully to your shopping cart!"
-        // );
+        await Global.create("cart", post).then((data) => {
+          if (data.success) {
+            setFetchTable((prev) => !prev);
+            Swal.fire({
+              title: "Success!",
+              text: data.message,
+              icon: "success",
+              background: "fffcf3",
+              confirmButtonColor: "#5a2744",
+            });
+          } else
+            Swal.fire({
+              icon: "error",
+              title: "Oops...",
+              text: data.message,
+              background: "fffcf3",
+              confirmButtonColor: "#5a2744",
+            });
+          return data;
+        });
       } else
-        alert(
-          "Sorry, it appears this product is out of stock or doesn't have the desired quantity available."
-        );
-    } else alert("Please, select a product to add to you shopping cart.");
+        Swal.fire({
+          title: "Oops...",
+          text: "Sorry, it appears this product is out of stock or doesn't have the desired quantity available.",
+          icon: "error",
+          background: "fffcf3",
+          confirmButtonColor: "#5a2744",
+        });
+    } else
+      Swal.fire({
+        title: "Oops...",
+        text: "Please, select a product to add to you shopping cart.",
+        icon: "info",
+        background: "fffcf3",
+        confirmButtonColor: "#5a2744",
+      });
   }
 
   return (
@@ -108,6 +165,7 @@ export default function Home() {
             id="productSelect"
             route="products"
             label="Products"
+            value={post.product}
             onChange={handleSelectChange}
             required
           />
@@ -117,7 +175,8 @@ export default function Home() {
             placeholder="Amount"
             label="Products"
             min="0"
-            onChange={handleChange}
+            value={post.amount}
+            onChange={handleAmountChange}
             required
           />
           <InputText
@@ -150,7 +209,8 @@ export default function Home() {
         route="cart"
         columns={["PRODUCT", "AMOUNT", "UNIT PRICE", "TOTAL"]}
         params={["name", "amount", "price", "total"]}
-        dataTable={addedItem}
+        fetchTable={fetchTable}
+        cart={[priceLabel.taxValue, priceLabel.totalValue]}
       />
     </>
   );

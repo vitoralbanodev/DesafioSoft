@@ -1,7 +1,7 @@
 import "../css/NavBar.css";
 import { Link, useMatch, useResolvedPath } from "react-router-dom";
 import logo from "../assets/logo.png";
- 
+
 const NavBar = () => (
   <>
     <nav>

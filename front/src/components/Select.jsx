@@ -17,7 +17,7 @@ export function Select(props) {
       className={styles.select}
       name={props.name}
       onChange={props.onChange}
-      defaultValue=""
+      value={props.value}
       required={props.required}
     >
       <option disabled value="" hidden>

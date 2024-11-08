@@ -1,10 +1,9 @@
 .tableComponent {
-  display: flex;
   grid-column: 2;
   border-left: solid;
   border-color: var(--wine);
   align-items: center;
-  justify-content: center;
+  /* justify-content: center; */
   width: 50%;
 }
 
@@ -42,19 +41,22 @@ th:last-of-type {
   align-items: center;
 }
 
-.soloTable{
+.soloTable {
   width: 100%;
   margin-left: 0.8%;
   margin-top: 0.8%;
   margin-right: 0.8%;
 }
 
-.soloTable td:last-of-type,
-th:last-of-type {
+.soloTable th:last-of-type {
   width: 50px;
   border-right: none;
   border-bottom: none;
   justify-content: center;
   align-items: center;
-  
+}
+
+#detailDiv td:last-of-type {
+  border-top: 1px solid;
+  border-bottom: 1px solid;
 }

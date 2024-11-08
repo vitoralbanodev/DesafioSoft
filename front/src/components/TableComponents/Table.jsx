@@ -1,21 +1,33 @@
 import style from "../../css/Table.module.css";
 import TableHead from "./TableHead";
 import TableBody from "./TableBody";
+import { CartInputs } from "../CartInputs";
 
 const Table = (props) => {
   return (
     <>
-      <div className={`${style[props.style]}`}>
+      <div
+        id={props.none ? `${style["detailDiv"]}` : ""}
+        className={`${style[props.style]}`}
+      >
         <div className={style.tableDiv}>
           <table className={style.genericTable}>
-            <TableHead columns={props.columns} />
+            <TableHead columns={props.columns} none={props.none} />
             <TableBody
-              dataTable={props.dataTable}
+              fetchTable={props.fetchTable}
               route={props.route}
               params={props.params}
+              code={props.code}
+              view={props.view}
+              none={props.none}
             />
           </table>
         </div>
+        {props.cart ? (
+          <CartInputs taxValue={props.cart[0]} totalValue={props.cart[1]} />
+        ) : (
+          ""
+        )}
       </div>
     </>
   );

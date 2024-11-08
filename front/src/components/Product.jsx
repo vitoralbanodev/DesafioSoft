@@ -1,42 +1,65 @@
 import { Button } from "./Button";
 import { InputText } from "./InputText";
-import Table from "./TableComponents/Table";
-
-import style from "../css/Form.module.css";
 import { Select } from "./Select";
 import { useState } from "react";
-import axios from "axios";
+import Table from "./TableComponents/Table";
+import Global from "./Global";
+import Swal from "sweetalert2";
+
+import style from "../css/Form.module.css";
 
 export default function Product() {
   const [post, setPost] = useState({
-    category: 0,
+    category: "",
     name: "",
     amount: 0,
     price: 0,
   });
+  const [fetchTable, setFetchTable] = useState(false);
 
   function handleChange(e) {
     console.log(e.target.value);
+
+    if (e.target.name == "name") {
+      let categoryNameRegex = e.target.value.replace(/[^a-zA-Z]/g, "");
+      e.target.value = categoryNameRegex;
+    }
+
+    if (e.target.name == "amount") {
+      let categoryTaxRegex = e.target.value.replace(/[^\d.]/g, "");
+      e.target.value = categoryTaxRegex;
+    }
+
+    if (e.target.name == "price") {
+      let categoryTaxRegex = e.target.value.replace(/[^\d.]/g, "");
+      e.target.value = categoryTaxRegex;
+    }
+
     setPost({ ...post, [e.target.name]: e.target.value });
   }
 
-  function handleSubmit(e) {
+  async function handleSubmit(e) {
     e.preventDefault();
-    axios
-      .post("http://localhost/routes/products.php", post)
-      .then((response) => {
-        if (response.status != 200) {
-          throw new Error("Error on internal request to server");
-        }
-        return response.data;
-      })
-      .then((data) => {
-        if (data.success) alert(data.message);
-        else alert(data.message);
-      })
-      .catch((error) => {
-        alert("Something went wrong: " + error.message);
-      });
+    Global.create("products", post).then((data) => {
+      if (data.success) {
+        setFetchTable((prev) => !prev);
+        Swal.fire({
+          title: "Success!",
+          text: data.message,
+          icon: "success",
+          background: "fffcf3",
+          confirmButtonColor: "#5a2744",
+        });
+      } else
+        Swal.fire({
+          icon: "error",
+          title: "Oops...",
+          text: data.message,
+          background: "fffcf3",
+          confirmButtonColor: "#5a2744",
+        });
+      return data;
+    });
   }
   return (
     <>
@@ -52,6 +75,7 @@ export default function Product() {
             id="productSelect"
             route="categories"
             onChange={handleChange}
+            value={post.category}
             required
           />
           <InputText
@@ -88,6 +112,7 @@ export default function Product() {
         route="products"
         columns={["CODE", "PRODUCT", "AMOUNT", "UNIT PRICE", "CATEGORY"]}
         params={["code", "name", "amount", "price", "category_name"]}
+        fetchTable={fetchTable}
       />
     </>
   );

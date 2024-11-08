@@ -1,8 +1,6 @@
-.labels{
+.labels {
   background: none;
   border: none;
-  font-size: 18px;
-  width: 85px;
 }
 
 #addButton {
@@ -24,7 +22,6 @@
 #deleteButton {
   padding-top: 5px;
   color: var(--wine-500);
-  height: 35px;
 }
 
 #deleteButton:hover {
@@ -48,13 +45,10 @@
 
 #viewButton {
   color: rgb(54, 216, 54);
-  margin-bottom: 5px;
-  margin-left: 9px;
 }
 
 #viewButton:hover {
   color: rgb(5, 148, 5);
-  font-weight: bold;
   cursor: pointer;
 }
 
@@ -65,26 +59,6 @@
 #sortIcon:hover {
   cursor: pointer;
   color: var(--dark-purple);
-}
-
-#cancelButton:hover {
-  background-color: #ebebeb;
-}
-
-#clearButton {
-  cursor: pointer;
-  width: 10%;
-  height: 30px;
-  border: none;
-  border-radius: 4px;
-  background-color: var(--purple);;
-  margin: 2%;
-  font-size: 18px;
-  font-weight: 600;
-}
-
-#clearButton:hover {
-  background-color: var(--dark-purple);
 }
 
 #finishButton,
@@ -99,9 +73,32 @@
 }
 
 #finishButton {
-  background-color: var(--purple);;
+  color: var(--white);
+  background-color: var(--wine);
 }
 
 #finishButton:hover {
-  background-color: var(--dark-purple);
+  background-color: var(--dark-wine);
+}
+
+#cancelButton {
+  background-color: #9c9c9c73;
+}
+
+#cancelButton:hover {
+  background-color: #9c9c9cb0;
+}
+
+#closeSpan {
+  border-radius: 100%;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--dark-wine);
+  position: absolute;
+  top: 10px;
+  right: 10px;
+}
+#closeSpan:hover {
+  color: var(--light-wine);
 }

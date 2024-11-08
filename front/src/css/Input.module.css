@@ -14,7 +14,7 @@
 }
 
 .input::placeholder,
-.select:invalid{
+.select:invalid {
   color: var(--placeholder) !important;
 }
 
@@ -23,10 +23,36 @@
   border: 2px solid var(--wine);
 }
 
-.select{
+.select {
   appearance: none;
   background-image: url("../assets/arrow_down.png");
   background-repeat: no-repeat;
   background-position: right 0.4rem top 55%;
   background-size: 1.5rem auto;
+}
+
+.labels {
+  display: flex;
+  padding-left: 50px;
+  margin-top: 3rem;
+  text-align: start;
+  flex-direction: column;
+}
+
+.label {
+  font-size: 1.3rem;
+}
+
+.labelInput {
+  justify-items: end;
+  background: none;
+  border: none;
+  font-size: 1.3rem;
+  width: 100px;
+}
+
+.buttons {
+  display: flex;
+  margin-top: 2rem;
+  gap: 1rem;
 }

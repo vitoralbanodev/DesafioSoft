@@ -1,5 +1,4 @@
 function TableHead(props) {
-  console.log("teste")
   return (
     <>
       <thead>
@@ -7,7 +6,7 @@ function TableHead(props) {
           {props.columns.map((column, index) => (
             <th key={index}>{column}</th>
           ))}
-          <th></th>
+          {props.none ? "" : <th></th>}
         </tr>
       </thead>
     </>

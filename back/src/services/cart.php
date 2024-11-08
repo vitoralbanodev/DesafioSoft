@@ -4,14 +4,15 @@ require('../index.php');
 class Cart
 {
 
-    function createProduct($product, $amount, $price, $tax)
+    function createProduct($product, $amount, $price, $tax, $total)
     {
         try {
-            $sql = myPDO->prepare('INSERT INTO cart (product_code, amount, price, tax) VALUES (:product_code, :amount, :price, :tax)');
+            $sql = myPDO->prepare('INSERT INTO cart (product_code, amount, price, tax, total) VALUES (:product_code, :amount, :price, :tax, :total)');
             $sql->bindValue(':product_code', $product, PDO::PARAM_INT);
             $sql->bindValue(':amount', $amount, PDO::PARAM_INT);
             $sql->bindValue(':price', $price, PDO::PARAM_STR);
             $sql->bindValue(':tax', $tax, PDO::PARAM_STR);
+            $sql->bindValue(':total', $total, PDO::PARAM_STR);
             $sql->execute();
             methods->update("products", "candelete = false", "code = " . $product);
         } catch (Exception $e) {
